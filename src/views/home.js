@@ -4,56 +4,110 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Text, Image, Alert} from 'react-native';
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+  Icon,
+  Button,
+  Container,
+  Header,
+  Content,
+  Left,
+  Right,
+  Body,
+  View,
+} from 'native-base';
+import Swiper from 'react-native-swiper';
+/**imports styles */
+import text from '../style/text.js';
+import colorScheme from '../style/colorScheme.js';
+import theme from '../style/theme.js';
+import containers from '../style/containers.js';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+//custom components imports
+import CustomHeader from '../components/customHeader';
 
-
-export default class HomePage extends Component{
-  render() {
-    return (
-      <View style={styles.container}>
-      
-        <Text style={styles.welcome}>
-          Welcome to React Native!Priya
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
+import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../constants';
+const Slider = props => (
+  <View style={styles.container}>
+    <Image style={styles.image} source={props.uri} />
+  </View>
+);
+const {width} = SCREEN_WIDTH;
+const styles = {
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  image: {
+    flex: 1,
+    width,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+};
+export default class HomePage extends Component {
+  static navigationOptions = ({navigation}) => ({
+    title: 'Home',
+    headerLeft: (
+      <Icon
+        name="ios-menu"
+        style={{paddingLeft: 10}}
+        onPress={() => navigation.navigate('DrawerOpen')}
+      />
+    ),
+    drawerLabel: 'HOME',
+    drawerIcon: ({tintColor}) => (
+      <Image
+        source={require('../../public/imgs/home.png')}
+        style={{width: 15, height: 15}}
+      />
+    ),
+  });
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageSlider: [
+        "require('../../public/imgs/producer_bg.png')",
+        "require('../../public/imgs/slide.jpg')",
+      ],
+      test: 'ji',
+    };
+    console.log(this.state);
+  }
+
+  render() {
+    return (
+      <View>
+        <CustomHeader
+          title="Home"
+          drawerOpen={() => this.props.navigation.navigate('DrawerOpen')}
+          search_click={() => this._onSearchClick()}
+          cart_click={() => this._onCartClick()}
+        />
+
+        <View style={{flex: 1, height: 20}}>
+          <Swiper height={240}>
+            <View style={styles.container}>
+              <Image
+                style={styles.image}
+                source={require('../../public/imgs/producer_bg.png')}
+              />
+            </View>
+            <View style={styles.container}>
+              <Image
+                style={styles.image}
+                source={require('../../public/imgs/slide.jpg')}
+              />
+            </View>
+          </Swiper>
+        </View>
+      </View>
+    );
+  }
+
+  _onSearchClick = () => {
+    Alert.alert('Search Click...');
+  };
+  _onCartClick = () => {
+    Alert.alert('Cart Click...');
+  };
+}
